@@ -11,8 +11,8 @@ const Image = sequelize.define("Image", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  embedding: {
-    type: DataTypes.JSON, // Storing embedding as JSON
+  tags: {
+    type: DataTypes.JSON, // Storing tags and descriptions as JSON
     allowNull: false,
   },
 });
