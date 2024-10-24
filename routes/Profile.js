@@ -62,12 +62,12 @@ router.post('/send-otp', async (req, res) => {
     try {
        
         //find user and save otp
-        const user = await User.findOne({ where: { email } });
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
+        // const user = await User.findOne({ where: { email } });
+        // if (!user) {
+        //     return res.status(404).send('User not found');
+        // }
          await sendOTP(email, otp);
-        await user.update({ otp: otp });
+        // await user.update({ otp: otp });
         // Save OTP to the user's record or a temporary store
         // For simplicity, we'll assume a temporary store here
         // req.session.otp = otp;
