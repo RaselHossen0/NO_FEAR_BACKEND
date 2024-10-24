@@ -2,6 +2,8 @@ const express = require('express');
 const { connectDB ,sequelize} = require('./config/db');
 const authRoutes = require('./routes/Auth');
 const profileRoutes = require('./routes/Profile');
+const uploadRoutes = require('./routes/ImageUpload');
+const searchRoutes = require('./routes/ImageSearch');
 
 const swaggerSetup = require('./swagger');
 const User = require('./models/User');
@@ -9,6 +11,7 @@ const cors = require('cors');
 const multer = require('multer');
 const cluster = require('cluster');
 const os = require('os');
+const e = require('express');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,6 +32,9 @@ swaggerSetup(app);
 connectDB();
 sequelize.sync({ force: false,alter: true }).then(() => {
   console.log('Database & tables created!');
+})
+.catch(err => {
+  console.error('Error while creating tables', err);
 });
 
 // Routes
@@ -38,6 +44,9 @@ sequelize.sync({ force: false,alter: true }).then(() => {
 app.use('/api/auth', authRoutes);
 
 app.use('/api/profile', profileRoutes);
+
+app.use('/api/upload', uploadRoutes);
+app.use('/api/search', searchRoutes);
 app.get('/', async (req, res) => {
  res.send('Hello World');
 }
