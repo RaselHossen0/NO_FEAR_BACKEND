@@ -377,7 +377,7 @@ const accommodationOptions = accommodationResponse.data.data.data.map((hotel) =>
           Transport: ${transportOptions.map(option => `${option.type} (${option.timeEstimate}, ${option.distance}, $${option.cost})`).join(", ")}
           Accommodation: ${accommodationOptions.map(option => `${option.name} ($${option.cost})`).join(", ")}
           Meal: ${mealPlans.map(plan => `${plan.location} ($${plan.cost})`).join(", ")}
-          Provide top 3 transport, accommodation, and meal options each day in this format (Please dont give anything like your cooment ect. just in the required format,with comma seperated lines): 
+          Provide top 3 transport, accommodation, and meal options each day in this format (Please dont give anything like your comment ect. just in the required format,with comma seperated lines): 
           Day 1:
           Transport: {option1, option2, option3}
           Accommodation: {option1, option2, option3}
@@ -423,53 +423,66 @@ const accommodationOptions = accommodationResponse.data.data.data.map((hotel) =>
         // Save itinerary per day
         await Iternery.create({
           dayNumber,
-          activity: `Day ${dayNumber} Itinerary`, // Optional placeholder for activities
+          activity: `Day ${dayNumber} Itinerary : ${dayDetails}`, // Optional placeholder for activities
           tripId: trip.id,
-        });
-      
-        // Save the best transport option (use the first one as top choice)
-        if (transportOptions.length) {
-          await TransportOption.create({
-            dayNumber,
-            tripId: trip.id,
-            type: transportOptions[0], // Best transport option
-            timeEstimate: null, // Optional
-            cost: null, // Optional
+        });try {
+          const allItinerary = await Iternery.findAll({ where: { tripId: trip.id } });
+        
+          // Create a new array to hold the itinerary and related details
+          const itineraryWithDetails = [];
+        
+          for (let itinerary of allItinerary) {
+            const dayNumber = itinerary.dayNumber;
+        
+            // Find accommodation options for this day
+            const accommodations = await AccommodationOption.findAll({
+              where: {
+                itineraryId: itinerary.id
+              },
+            });
+        
+            // Find transport options for this day
+            const transportOptions = await TransportOption.findAll({
+              where: {
+                itineraryId: itinerary.id,
+          
+              },
+            });
+        
+            // Find meal options for this day
+            const mealPlans = await MealPlan.findAll({
+              where: {
+                itineraryId: itinerary.id,
+               
+              },
+            });
+        
+            // Push the itinerary and associated details to the new array
+            itineraryWithDetails.push({
+              dayNumber: dayNumber,
+              itinerary: itinerary,  // Store the itinerary details
+              accommodations: accommodations,  // Store the accommodations
+              transportOptions: transportOptions,  // Store the transport options
+              mealPlans: mealPlans,  // Store the meal plans
+            });
+          }
+        
+          // Return the full itinerary with accommodations, transport, and meal options
+          res.status(200).json({
+            message: "Itinerary and details retrieved successfully!",
+            data: itineraryWithDetails, // Respond with the new array
           });
-        }
-      
-        // Save the best accommodation option (use the first one as top choice)
-        if (accommodationOptions.length) {
-          await AccommodationOption.create({
-            dayNumber,
-            tripId: trip.id,
-            type: preferences.budgetPreference, // User's budget preference
-            name: accommodationOptions[0], // Best accommodation option
-            cost: null, // Optional
-          });
-        }
-      
-        // Save the best meal option (use the first one as top choice)
-        if (mealOptions.length) {
-          await MealPlan.create({
-            dayNumber,
-            tripId: trip.id,
-            type: "Meal", // Fixed as meal type
-            location: mealOptions[0], // Best meal option
-            cost: null, // Optional
-          });
+        
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: "Error retrieving itinerary and details" });
         }
       }
-      
-      res.status(200).json({
-        message: "Itinerary generated and saved successfully!",
-        itinerary: generatedItinerary,
-      });
     } catch (error) {
       console.error(error);
+      //if any erro
       res.status(500).json({ error: "Error generating itinerary" });
     }
-  }
-  );
+  });
 
   module.exports = router;
