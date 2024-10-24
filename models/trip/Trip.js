@@ -14,10 +14,6 @@ const Trip = sequelize.define('Trip', {
     type: DataTypes.DATE,
     allowNull: false,
   },
-  endDate: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
   estimatedCost: {
     type: DataTypes.FLOAT,
     allowNull: true,
@@ -56,9 +52,6 @@ const Trip = sequelize.define('Trip', {
   timestamps: true,
 });
 
-// Associations
-Trip.hasMany(require('./TransportOption'), { foreignKey: 'tripId', as: 'transportOptions' });
-Trip.hasMany(require('./AccommodationOption'), { foreignKey: 'tripId', as: 'accommodationOptions' });
-Trip.hasMany(require('./MealPlan'), { foreignKey: 'tripId', as: 'mealPlans' });
+
 
 module.exports = Trip;

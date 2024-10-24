@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const {sequelize} = require('../../config/db');
+const { sequelize } = require('../../config/db');
 
 const MealPlan = sequelize.define('MealPlan', {
   type: {
@@ -14,16 +14,11 @@ const MealPlan = sequelize.define('MealPlan', {
     type: DataTypes.STRING, // e.g., 'Cafe Y'
     allowNull: true,
   },
-  tripId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'Trips', // Refers to the Trip model
-      key: 'id',
-    },
-    onDelete: 'CASCADE',
-  },
 }, {
   timestamps: true,
 });
+
+// Associations
+MealPlan.belongsTo(require('./Iternery'), { foreignKey: 'itineraryId', as: 'itinerary' });
 
 module.exports = MealPlan;

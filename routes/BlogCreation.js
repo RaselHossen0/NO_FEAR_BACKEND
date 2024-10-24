@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const TransportOption = require("../models/trip/TransportOption");
-const AccommodationOption = require("../models/trip/AccommodationOption");
-const MealPlan = require("../models/trip/MealPlan");
+const TransportOption = require("../models/itirenary/TransportOption");
+const AccommodationOption = require("../models/itirenary/AccomodationOption");
+const MealPlan = require("../models/itirenary/MealPlan");
 const Trip = require("../models/trip/Trip");
 const authMiddleware = require('../middleware/authmiddleware');
-const { OpenAIClient, AzureKeyCredential } = require("@azure/openai");
-const env = require('dotenv');
+
+
 const fetch = require("node-fetch");
 const Blog = require("../models/Blog");
 
