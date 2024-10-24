@@ -50,6 +50,7 @@ jobs:
           YELP_API_KEY : ${{ secrets.YELP_API_KEY }}
           RAPIDAPI_KEY : ${{ secrets.RAPIDAPI_KEY }}
           OPEN_AI_API_KEY : ${{ secrets.OPEN_AI_API_KEY }}
+          AZURE_API_KEY: ${{ secrets.AZURE_API_KEY }}
           # Add any other environment variables you need here
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa azureuser@4.240.96.205 << EOF
@@ -79,6 +80,7 @@ jobs:
             echo "YELP_API_KEY=${YELP_API_KEY}" >> .env
             echo "RAPIDAPI_KEY=${RAPIDAPI_KEY}" >> .env
             echo "OPEN_AI_API_KEY=${OPEN_AI_API_KEY}" >> .env
+            echo "AZURE_API_KEY=${AZURE_API_KEY}" >> .env
 
             # Restart the Node.js application (using pm2 or another process manager)
             pm2 restart all
