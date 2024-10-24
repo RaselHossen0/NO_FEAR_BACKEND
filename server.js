@@ -2,8 +2,8 @@ const express = require('express');
 const { connectDB, sequelize } = require('./config/db');
 const authRoutes = require('./routes/Auth');
 const profileRoutes = require('./routes/Profile');
-const uploadRoutes = require('./routes/ImageUpload');
-const searchRoutes = require('./routes/ImageSearch');
+
+
 const generateTrip = require('./routes/GenerateTrip');
 const blogCreatetion = require('./routes/BlogCreation');
 
@@ -44,8 +44,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
-app.use('/api/upload', uploadRoutes);
-app.use('/api/search', searchRoutes);
+
 app.use('/api/trip', generateTrip);
 app.use('/api/blogs', blogCreatetion);
 app.use('/api/image', imageRoutes);
