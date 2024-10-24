@@ -72,7 +72,7 @@ jobs:
             echo "EMAIL_PASS=${EMAIL_PASS}" >> .env
 
             # Restart the Node.js application (using pm2 or another process manager)
-            pm2 restart nofear-backend
+            pm2 restart all | pm2 start npm -- start --name "no-fear-backend"
 
             # If MySQL is involved, ensure the database is running
             sudo systemctl restart mysql
