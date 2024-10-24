@@ -57,7 +57,7 @@ router.put('/update/:userId', authMiddleware, upload.single('image'), async (req
 // Endpoint to send OTP
 router.post('/send-otp', async (req, res) => {
     const { email } = req.body;
-    const otp = crypto.randomInt(100000, 999999).toString();
+    const otp = crypto.randomInt(1000, 9999).toString();
 
     try {
        
