@@ -5,6 +5,7 @@ const profileRoutes = require('./routes/Profile');
 const uploadRoutes = require('./routes/ImageUpload');
 const searchRoutes = require('./routes/ImageSearch');
 const generateTrip = require('./routes/GenerateTrip');
+const blogCreatetion = require('./routes/BlogCreation');
 
 const swaggerSetup = require('./swagger');
 const User = require('./models/User');
@@ -49,6 +50,7 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/trip', generateTrip);
+app.use('/api/blogs', blogCreatetion);
 app.get('/', async (req, res) => {
  res.send('Hello World');
 }
