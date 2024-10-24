@@ -1,0 +1,80 @@
+name: Deploy Node.js Application to Azure Ubuntu Server
+
+on:
+  push:
+    branches:
+      - main  # This workflow will trigger when you push to the 'main' branch. Change this if needed.
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+            node-version: '18.18.0'  # Set the Node.js version your app uses.
+
+      - name: Install dependencies
+        run: npm install
+
+      # - name: Build the application
+      #   run: npm run build  # Modify this if your app doesn't need to be built.
+
+      - name: Prepare SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+        shell: bash
+
+      - name: Add Server to Known Hosts
+        run: |
+          ssh-keyscan -H 4.240.96.205 >> ~/.ssh/known_hosts
+        shell: bash
+
+      - name: Deploy to Azure Ubuntu Server
+        env:
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          DB_HOST: ${{ secrets.DB_HOST || '127.0.0.1' }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          PORT   : ${{ secrets.PORT  || 3000}}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          EMAIL_USER : ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS : ${{ secrets.EMAIL_PASS }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa azureuser@4.240.96.205 << EOF
+            # Navigate to your app's directory
+            cd /home/azureuser/but_hackathon
+
+            ls -la
+            pwd 
+
+            # Pull the latest changes from GitHub
+            git reset --hard
+            git pull origin main --force
+
+            # Install any new dependencies
+            npm install
+
+            # If you have environment variables, create/update .env file (optional)
+            echo "DB_USER=${DB_USER}" > .env
+            echo "DB_PASS=${DB_PASS}" >> .env
+            echo "DB_HOST=${DB_HOST}" >> .env
+            echo "DB_NAME=${DB_NAME}" >> .env
+            echo "PORT = ${PORT} " >> .env
+            echo "JWT_SECRET=${JWT_SECRET}" >> .env
+            echo "EMAIL_USER=${EMAIL_USER}" >> .env
+            echo "EMAIL_PASS=${EMAIL_PASS}" >> .env
+
+            # Restart the Node.js application (using pm2 or another process manager)
+            pm2 restart nofear-backend
+
+            # If MySQL is involved, ensure the database is running
+            sudo systemctl restart mysql
+            sudo systemctl restart nginx
+          EOF
