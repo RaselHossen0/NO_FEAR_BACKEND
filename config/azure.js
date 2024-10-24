@@ -7,7 +7,7 @@ const azureConfig = {
 
 // Function to analyze image using Azure Computer Vision API
 async function analyzeImage(imageUrl) {
-  const url = `${azureConfig.endpoint}/vision/v3.2/analyze?visualFeatures=Description,Tags`;
+  const url = `$https://hackathon-try.cognitiveservices.azure.com/vision/v3.2/analyze?visualFeatures=Description,Tags`;
 
   try {
     const response = await axios.post(url, { url: imageUrl }, {

@@ -33,22 +33,27 @@ exports.uploadImage = async (req, res) => {
 
 // Search images based on a query
 exports.searchImages = async (req, res) => {
-  const query = req.query.q;
+    const query = req.query.q;
 
-  // In the future, you can integrate Azure Cognitive Search for more advanced natural language querying
-  // Currently, we're doing a simple keyword match in the tags
-  try {
-    const images = await Image.findAll({
-      where: {
-        tags: {
-          [Op.like]: `%${query}%`
-        }
-      }
-    });
+    try {
+        // Use Azure Cognitive Search for advanced natural language querying
+        const searchResults = await searchImagesInAzure(query);
 
-    res.status(200).json({ data: images });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to search images', error: error.message });
-  }
+        // Extract image URLs from search results
+        const imageUrls = searchResults.map(result => result.imageUrl);
+
+        // Find images in the database based on the URLs returned by Azure Cognitive Search
+        const images = await Image.findAll({
+            where: {
+                imageUrl: {
+                    [Op.in]: imageUrls
+                }
+            }
+        });
+
+        res.status(200).json({ data: images });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to search images', error: error.message });
+    }
 };
