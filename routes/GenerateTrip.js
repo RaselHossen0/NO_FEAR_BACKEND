@@ -61,7 +61,7 @@ router.post('/generate', authMiddleware, async (req, res) => {
 const accommodationOptions = accommodationResponse.data.data.data.map((hotel) => ({
     type: budgetPreference,  // Budget, Mid-range, Luxury based on user input
     name: hotel.title || 'Unknown Hotel',  // Hotel name, or fallback if missing
-    cost: (hotel.priceForDisplay ? hotel.priceForDisplay.replace('$', '') * 117 : 'Price not available'),  // Handle missing price data
+    cost: (hotel.priceForDisplay ? hotel.priceForDisplay.replace('$', '') : '0'),  // Handle missing price data
 }));
 
 // Log the processed accommodation options for further debugging
