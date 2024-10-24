@@ -91,7 +91,7 @@ async function generateBlogContent(trip, transportOptions, accommodationOptions,
         });
     }
 
-    prompt += `\nRecap: This trip to ${trip.destination} was an unforgettable experience. You stayed at some great hotels, enjoyed delicious meals, and traveled efficiently with your chosen transport options.\n`;
+    prompt += `\nRecap: This trip to ${trip.destination} was an unforgettable experience. You stayed at some great hotels, enjoyed delicious meals, and traveled efficiently with your chosen transport options.Dont give any title and use proper tense in the sentences\n`;
 
     const response = await fetch(endpoint, {
         method: "POST",

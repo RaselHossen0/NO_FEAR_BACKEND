@@ -22,6 +22,10 @@ const AccommodationOption = sequelize.define('AccommodationOption', {
     },
     onDelete: 'CASCADE',
   },
+  photos : {
+    type: DataTypes.JSON,
+    allowNull: true,
+  },
 }, {
   timestamps: true,
 });
