@@ -4,7 +4,7 @@ const authMiddleware = require('../middleware/authmiddleware'); // Adjust the pa
 const User = require('../models/User'); // Adjust the path as necessary
 const multer = require('multer');
 const crypto = require('crypto');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { sendOTP } = require('../config/emailService'); // Adjust the path as necessary
 
 const router = express.Router();
