@@ -49,7 +49,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa azureuser@4.240.96.205 << EOF
             # Navigate to your app's directory
-            cd /home/azureuser/but_hackathon
+            cd /home/azureuser/NO_FEAR_BACKEND
 
             ls -la
             pwd 
