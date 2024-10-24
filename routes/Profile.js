@@ -57,17 +57,17 @@ router.put('/update/:userId', authMiddleware, upload.single('image'), async (req
 // Endpoint to send OTP
 router.post('/send-otp', async (req, res) => {
     const { email } = req.body;
-    const otp = crypto.randomInt(100000, 999999).toString();
+    const otp = crypto.randomInt(1000, 9999).toString();
 
     try {
        
         //find user and save otp
-        const user = await User.findOne({ where: { email } });
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
+        // const user = await User.findOne({ where: { email } });
+        // if (!user) {
+        //     return res.status(404).send('User not found');
+        // }
          await sendOTP(email, otp);
-        await user.update({ otp: otp });
+        // await user.update({ otp: otp });
         // Save OTP to the user's record or a temporary store
         // For simplicity, we'll assume a temporary store here
         // req.session.otp = otp;

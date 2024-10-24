@@ -17,4 +17,5 @@ const Image = sequelize.define("Image", {
   },
 });
 
+
 module.exports = Image;
