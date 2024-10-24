@@ -46,6 +46,11 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           EMAIL_USER : ${{ secrets.EMAIL_USER }}
           EMAIL_PASS : ${{ secrets.EMAIL_PASS }}
+          GOOGLE_MAPS_API_KEY : ${{ secrets.GOOGLE_MAPS_API_KEY }}
+          YELP_API_KEY : ${{ secrets.YELP_API_KEY }}
+          RAPIDAPI_KEY : ${{ secrets.RAPIDAPI_KEY }}
+          OPEN_AI_API_KEY : ${{ secrets.OPEN_AI_API_KEY }}
+          # Add any other environment variables you need here
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa azureuser@4.240.96.205 << EOF
             # Navigate to your app's directory
@@ -70,6 +75,10 @@ jobs:
             echo "JWT_SECRET=${JWT_SECRET}" >> .env
             echo "EMAIL_USER=${EMAIL_USER}" >> .env
             echo "EMAIL_PASS=${EMAIL_PASS}" >> .env
+            echo "GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}" >> .env
+            echo "YELP_API_KEY=${YELP_API_KEY}" >> .env
+            echo "RAPIDAPI_KEY=${RAPIDAPI_KEY}" >> .env
+            echo "OPEN_AI_API_KEY=${OPEN_AI_API_KEY}" >> .env
 
             # Restart the Node.js application (using pm2 or another process manager)
             pm2 restart all

@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
+const Blog = require('./Blog');
 
 // Define the User model
 const User = sequelize.define('User', {
@@ -9,8 +10,7 @@ const User = sequelize.define('User', {
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
+    allowNull: false
   },
   password: {
     type: DataTypes.STRING,
@@ -26,5 +26,6 @@ const User = sequelize.define('User', {
   },
   // Add new fields here
 });
-
+User.hasMany(Blog, { onDelete: 'CASCADE' });  // One user can have many blogs
+Blog.belongsTo(User);  // Blog belongs to a single user
 module.exports = User;
