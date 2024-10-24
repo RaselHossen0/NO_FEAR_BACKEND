@@ -11,7 +11,7 @@ const Image = sequelize.define("Image", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  embedding: {
+  features: {
     type: DataTypes.JSON, // Storing embedding as JSON
     allowNull: false,
   },
