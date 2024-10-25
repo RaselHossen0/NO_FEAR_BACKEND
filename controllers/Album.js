@@ -1,5 +1,3 @@
-Album.js
-
 const Album = require('../models/Album');
 const Image = require('../models/Image');
 const multer = require('multer');
@@ -8,8 +6,6 @@ const express = require("express");
 
 const { ImageAnnotatorClient } = require("@google-cloud/vision");
 const { HfInference } = require("@huggingface/inference"); // Hugging Face API for embeddings
-const tf = require("@tensorflow/tfjs"); // Required for TensorFlow.js
-// Create a new album
 exports.createAlbum = async (req, res) => {
   try {
     const album = await Album.create(req.body);
@@ -130,7 +126,7 @@ exports.uploadImageToAlbum = async (req, res) => {
       // Save image metadata and labels in MySQL database
       const image = await Image.create({
         imageUrl: `/uploads/${req.file.filename}`,
-        tags: JSON.stringify(embeddings),
+        features: JSON.stringify(embeddings),
         ...req.body,
         title: req.file.filename
       });
@@ -243,7 +239,8 @@ const parseEmbedding = (embeddingStr) => {
 // Search endpoint
 exports.queryImage = async (req, res) => {
   try {
-    const { query ,albumId} = req.query; // Get search query from URL parameters
+    const albumId = req.params.albumId;
+    const { query } = req.query; // Get search query from URL parameters
     console.log("query",query);
     console.log("albumId",albumId);
 
@@ -276,7 +273,7 @@ exports.queryImage = async (req, res) => {
     // 4. Calculate cosine similarity for each image embedding
     const results = images
       .map((image) => {
-        const tags = image.tags || {};
+        const tags = image.features || {};
         const imageEmbedding = parseEmbedding(tags);
 
         // Check if the dimensions match
