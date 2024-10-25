@@ -19,10 +19,7 @@ const AccommodationOption = sequelize.define('AccommodationOption', {
     type: DataTypes.JSON,
     allowNull: true,
   },
-  itineraryId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
+
 }, {
   timestamps: true,
 });

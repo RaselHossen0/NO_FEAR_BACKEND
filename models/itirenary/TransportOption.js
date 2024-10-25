@@ -14,10 +14,7 @@ const TransportOption = sequelize.define('TransportOption', {
     type: DataTypes.FLOAT, // e.g., 1000
     allowNull: true,
   },
-  itineraryId:{
-    type: DataTypes.INTEGER,
-    allowNull: false
-  }
+
 
 }, {
   timestamps: true,
