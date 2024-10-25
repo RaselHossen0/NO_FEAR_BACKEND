@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../../config/db');
+const { i } = require('mathjs');
 
 const AccommodationOption = sequelize.define('AccommodationOption', {
   type: {
@@ -17,6 +18,10 @@ const AccommodationOption = sequelize.define('AccommodationOption', {
   photos: {
     type: DataTypes.JSON,
     allowNull: true,
+  },
+  itineraryId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
 }, {
   timestamps: true,

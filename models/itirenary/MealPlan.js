@@ -14,6 +14,10 @@ const MealPlan = sequelize.define('MealPlan', {
     type: DataTypes.STRING, // e.g., 'Cafe Y'
     allowNull: true,
   },
+  itineraryId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
 }, {
   timestamps: true,
 });

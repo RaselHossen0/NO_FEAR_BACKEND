@@ -319,6 +319,7 @@ const accommodationOptions = accommodationResponse.data.data.data.map((hotel) =>
           cost: Math.floor(leg.distance.value * 0.1),
         }));
       }
+      console.log("Transport Options:", transportOptions);
   
       // Step 3: Get accommodation options using Google Places API
       const accommodationResponse = await googleMapsClient.placesNearby({
@@ -339,6 +340,7 @@ const accommodationOptions = accommodationResponse.data.data.data.map((hotel) =>
         latitude: place.geometry.location.lat,
         longitude: place.geometry.location.lng,
       }));
+      console.log("Accommodation Options:", accommodationOptions);
   
       // Step 4: Get meal plan options using Google Places API
       const mealResponse = await googleMapsClient.placesNearby({
@@ -359,6 +361,7 @@ const accommodationOptions = accommodationResponse.data.data.data.map((hotel) =>
         latitude: restaurant.geometry.location.lat,
         longitude: restaurant.geometry.location.lng,
       }));
+      console.log("Meal Plans:", mealPlans);
       const geminiEndpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" + process.env.GEMINI_API_KEY;
       console.log("Gemini Endpoint:", geminiEndpoint);
 
@@ -419,13 +422,28 @@ const accommodationOptions = accommodationResponse.data.data.data.map((hotel) =>
         // Extract meal options
         const mealLine = dayDetails.find(line => line.startsWith("* **Meal:**"));
         const mealOptions = mealLine ? mealLine.split("**Meal:**")[1].split(",").map(option => option.trim()) : [];
-      
+    
         // Save itinerary per day
-        await Iternery.create({
+    const iti=    await Iternery.create({
           dayNumber,
           activity: `Day ${dayNumber} Itinerary : ${dayDetails}`, // Optional placeholder for activities
           tripId: trip.id,
-        });try {
+
+        });
+        try {
+
+          // Save transport options for the day
+          await Promise.all(transportOptions.map(option =>
+            TransportOption.create({ type: option, itineraryId: iti.id })
+          ));
+          // Save accommodation options for the day
+          await Promise.all(accommodationOptions.map(option =>
+            AccommodationOption.create({ name: option, itineraryId: iti.id })
+          ));
+          // Save meal options for the day
+          await Promise.all(mealOptions.map(option =>
+            MealPlan.create({ location: option, itineraryId: iti.id })
+          ));
           const allItinerary = await Iternery.findAll({ where: { tripId: trip.id } });
         
           // Create a new array to hold the itinerary and related details
@@ -461,7 +479,7 @@ const accommodationOptions = accommodationResponse.data.data.data.map((hotel) =>
             itineraryWithDetails.push({
               dayNumber: dayNumber,
               itinerary: itinerary,  // Store the itinerary details
-              accommodations: accommodations,  // Store the accommodations
+              accommodations: accommodationOptions,  // Store the accommodations
               transportOptions: transportOptions,  // Store the transport options
               mealPlans: mealPlans,  // Store the meal plans
             });
@@ -482,6 +500,43 @@ const accommodationOptions = accommodationResponse.data.data.data.map((hotel) =>
       console.error(error);
       //if any erro
       res.status(500).json({ error: "Error generating itinerary" });
+    }
+  });
+
+  //get a all itineraries for a trip
+  router.get("/:tripId/itinerary", authMiddleware, async (req, res) => {
+    const { tripId } = req.params;
+    console.log("tripId", tripId);
+  
+    try {
+      // Use eager loading with 'include' to fetch related models in one query
+      const allItinerary = await Iternery.findAll({
+        where: { tripId },
+        // include: [
+        //   {
+        //     model: AccommodationOption,
+        //     as: "accommodations",  // Ensure you define proper associations in the models
+        //   },
+        //   {
+        //     model: TransportOption,
+        //     as: "transportOptions",
+        //   },
+        //   {
+        //     model: MealPlan,
+        //     as: "mealPlans",
+        //   }
+        // ]
+      });
+  
+      // Return the full itinerary with accommodations, transport, and meal options
+      res.status(200).json({
+        message: "Itinerary and details retrieved successfully!",
+        data: allItinerary, // Now all related details are part of the 'allItinerary'
+      });
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Error retrieving itinerary and details" });
     }
   });
 
