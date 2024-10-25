@@ -5,6 +5,7 @@ const MealPlan = sequelize.define('MealPlan', {
   type: {
     type: DataTypes.STRING, // e.g., 'Breakfast', 'Lunch'
     allowNull: false,
+    defaultValue: 'Breakfast',
   },
   cost: {
     type: DataTypes.FLOAT, // e.g., 200

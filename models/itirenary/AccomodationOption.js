@@ -3,9 +3,10 @@ const { sequelize } = require('../../config/db');
 const { i } = require('mathjs');
 
 const AccommodationOption = sequelize.define('AccommodationOption', {
-  type: {
-    type: DataTypes.ENUM('Budget', 'Mid-range', 'Luxury'),
-    allowNull: true, // User's preference category for accommodation
+  typeAc: {
+    type: DataTypes.STRING, // e.g., 'Hotel', 'Resort'
+    allowNull: true, // User's preference category for accommodation,
+    defaultValue: 'Budget',
   },
   name: {
     type: DataTypes.STRING, // e.g., 'Hotel X'

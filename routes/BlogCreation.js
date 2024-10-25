@@ -9,8 +9,9 @@ const authMiddleware = require('../middleware/authmiddleware');
 
 const fetch = require("node-fetch");
 const Blog = require("../models/Blog");
+const Itinerary = require('../models/itirenary/Iternery');
 
-const endpoint = "https://hrase-m2n3eo6g-northcentralus.openai.azure.com/openai/deployments/gpt-35-turbo-16k/chat/completions?api-version=2024-08-01-preview";
+const endpoint = "https://hrase-m2o0j8xg-swedencentral.openai.azure.com/openai/deployments/gpt-4-32k/chat/completions?api-version=2024-08-01-preview";
 const apiKey = process.env.OPEN_AI_API_KEY;
 // POST /generate-blog
 router.post('/generate-blog',authMiddleware, async (req, res) => {
@@ -25,12 +26,14 @@ router.post('/generate-blog',authMiddleware, async (req, res) => {
 
     if (!trip) {
       return res.status(404).json({ error: 'Trip not found' });
-    }
+    } 
+
+    const itinerary = await Itinerary.findAll({ where: { tripId } });
 
     // Step 2: Fetch related transport, accommodation, and meal details
-    const transportOptions = await TransportOption.findAll({ where: { tripId } });
-    const accommodationOptions = await AccommodationOption.findAll({ where: { tripId } });
-    const mealPlans = await MealPlan.findAll({ where: { tripId } });
+    const transportOptions = await TransportOption.findAll({ where: { itineraryId: itinerary[0].id } });
+    const accommodationOptions = await AccommodationOption.findAll({ where: { itineraryId: itinerary[0].id } });
+    const mealPlans = await MealPlan.findAll({ where: { itineraryId: itinerary[0].id } });
 
     // Step 3: Generate the blog content based on trip data
     const blogContent =await generateBlogContent(trip, transportOptions, accommodationOptions, mealPlans);
@@ -115,6 +118,7 @@ async function generateBlogContent(trip, transportOptions, accommodationOptions,
     });
 
     const data = await response.json();
+    console.log(data);
     // console.log(data.choices);
     // for (let i = 0; i < data.choices.length; i++) {
     //     console.log(data.choices[i].message.content);
