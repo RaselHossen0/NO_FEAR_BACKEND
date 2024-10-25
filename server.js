@@ -48,6 +48,7 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/trip', generateTrip);
 app.use('/api/blogs', blogCreatetion);
 app.use('/api/image', imageRoutes);
+app.use('/api/album', require('./routes/AlbumRoute'));
 
 // Root route
 app.get('/', async (req, res) => {
