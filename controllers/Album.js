@@ -240,7 +240,7 @@ const parseEmbedding = (embeddingStr) => {
 exports.queryImage = async (req, res) => {
   try {
     const albumId = req.params.albumId;
-    const { query } = req.query; // Get search query from URL parameters
+    const { query } = req.body; // Get search query from URL parameters
     console.log("query",query);
     console.log("albumId",albumId);
 

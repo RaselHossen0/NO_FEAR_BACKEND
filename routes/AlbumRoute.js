@@ -27,6 +27,6 @@ router.post('/:albumId/upload', albumController.uploadImageToAlbum);
 
 //query Images
 
-router.get('/query/:albumId', albumController.queryImage);
+router.post('/query/:albumId', albumController.queryImage);
 
 module.exports = router;
